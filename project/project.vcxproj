@@ -21,11 +21,13 @@
   <ItemGroup>
     <ClCompile Include="project.cpp" />
     <ClCompile Include="project_data_parser.cpp" />
+    <ClCompile Include="project_metadata_parser.cpp" />
     <ClCompile Include="project_parser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="project.h" />
     <ClInclude Include="project_data_parser.h" />
+    <ClInclude Include="project_metadata_parser.h" />
     <ClInclude Include="project_parser.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -16,6 +16,21 @@ enum class ValueType : int {
 	Bool, Int, Float
 };
 
+class ProjectObjView {
+public:
+	Name_t m_name;
+
+	using Members_t = std::unordered_map<Name_t, ValueType>;
+	Members_t m_members;
+};
+
+class ProjectMetadata {
+public:
+	using Views_t = std::vector<std::unique_ptr<ProjectObjView>>;
+	Views_t m_views;
+};
+
+
 class ProjectObject {
 public:
 	Name_t m_name;
@@ -36,6 +51,7 @@ class Project {
 public:
 	Name_t m_name;
 
+	ProjectMetadata m_meta;
 	ProjectData m_data;
 };
 

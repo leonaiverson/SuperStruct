@@ -16,6 +16,7 @@ public:
 	bool Parse( Project& project );
 
 private:
+	bool ReadMetadata(const String_t& metadataFileName, ProjectMetadata& metadata);
 	bool ReadData(const String_t& dataFileName, ProjectData& data);
 };
 
