@@ -124,6 +124,8 @@ bool ProjectParser::ParseObjectData(Project& project, ProjectObject& object)
 				return false;
 			}
 
+			ProjectObject::Value_t projectValue;
+
 			if (Cmp("bool", valueType))
 			{
 				bool value = false;
@@ -132,6 +134,7 @@ bool ProjectParser::ParseObjectData(Project& project, ProjectObject& object)
 					m_errorMessage << "for object.data.bool name=value";
 					return false;
 				}
+				projectValue = value;
 			}
 			else if (Cmp("int", valueType))
 			{
@@ -141,6 +144,7 @@ bool ProjectParser::ParseObjectData(Project& project, ProjectObject& object)
 					m_errorMessage << "for object.data.int name=value";
 					return false;
 				}
+				projectValue = value;
 			}
 			else if (Cmp("float", valueType))
 			{
@@ -150,9 +154,21 @@ bool ProjectParser::ParseObjectData(Project& project, ProjectObject& object)
 					m_errorMessage << "for object.data.float name=value";
 					return false;
 				}
+				projectValue = value;
 			}
 			else {
 				m_errorMessage << " bool, int, float types expected";
+				return false;
+			}
+
+			auto kv = object.m_values.find(valueName);
+			if (kv == object.m_values.end())
+			{
+				object.m_values.insert(std::make_pair(valueName, projectValue));
+			}
+			else
+			{
+				m_errorMessage << " object already contains value " << kv->first;
 				return false;
 			}
 		}
