@@ -20,6 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="project.cpp" />
+    <ClCompile Include="project_parser.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="project.h" />
+    <ClInclude Include="project_parser.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

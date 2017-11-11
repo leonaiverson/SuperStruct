@@ -12,9 +12,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base.h" />
+    <ClInclude Include="memoryblock.h" />
+    <ClInclude Include="parser.h" />
     <ClInclude Include="tokenizer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="memoryblock.cpp" />
+    <ClCompile Include="parser.cpp" />
     <ClCompile Include="tokenizer.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

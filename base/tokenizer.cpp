@@ -100,7 +100,7 @@ bool base::TextTokenizer::Open( const char *szText, const char *szTextEnd )
 	return true;
 }
 
-bool base::TextTokenizer::Open( const char *szText, int iTextLength )
+bool base::TextTokenizer::Open( const char *szText, size_t iTextLength )
 {
 	if( iTextLength <= 0 )
 	{

@@ -99,6 +99,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ShowProgress>NotSet</ShowProgress>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -150,6 +151,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="codegen.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\base\base.vcxproj">
+      <Project>{58d24f32-6e44-4684-aae5-e7c380bedcf8}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\project\project.vcxproj">
+      <Project>{1be3c5e4-4492-450c-a473-5ecba68fe6a7}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

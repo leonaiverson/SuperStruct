@@ -39,7 +39,7 @@ namespace base
 		virtual ~TextTokenizer();
 
 		bool Open( const char *szText, const char *szTextEnd );
-		bool Open( const char *szText, int iTextLength );
+		bool Open( const char *szText, size_t iTextLength );
 		void Close();
 
 		bool ParseNext();
