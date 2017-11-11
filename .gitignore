@@ -1,0 +1,5 @@
+/intermediate
+/out
+*.suo
+*.vcxproj.user
+/.vs
