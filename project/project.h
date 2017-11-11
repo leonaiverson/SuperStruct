@@ -26,12 +26,17 @@ public:
 	Values_t m_values;
 };
 
+class ProjectData {
+public:
+	using Objects_t = std::vector<std::unique_ptr<ProjectObject>>;
+	Objects_t m_objects;
+};
+
 class Project {
 public:
 	Name_t m_name;
 
-	using Objects_t = std::vector<std::unique_ptr<ProjectObject>>;
-	Objects_t m_objects;
+	ProjectData m_data;
 };
 
 }

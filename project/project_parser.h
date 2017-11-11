@@ -16,8 +16,7 @@ public:
 	bool Parse( Project& project );
 
 private:
-	bool ParseObject(Project& project, ProjectObject& object);
-	bool ParseObjectData(Project& project, ProjectObject& object);
+	bool ReadData(const String_t& dataFileName, ProjectData& data);
 };
 
 }
