@@ -11,6 +11,8 @@
 namespace ss {
 
 using Name_t = std::string;
+using MemberName_t = std::string;
+using ViewName_t = std::string;
 
 enum class ValueType : int {
 	Bool, Int, Float
@@ -20,9 +22,9 @@ const std::string& ToString(ValueType type);
 
 class ProjectObjView {
 public:
-	Name_t m_name;
+	ViewName_t m_name;
 
-	using Members_t = std::unordered_map<Name_t, ValueType>;
+	using Members_t = std::unordered_map<MemberName_t, ValueType>;
 	Members_t m_members;
 };
 
@@ -39,7 +41,7 @@ public:
 
 	using Value_t = std::variant<bool, int, float>; // indices must match ValueType 
 
-	using Values_t = std::unordered_map<Name_t, Value_t>;
+	using Values_t = std::unordered_map<MemberName_t, Value_t>;
 	Values_t m_values;
 };
 

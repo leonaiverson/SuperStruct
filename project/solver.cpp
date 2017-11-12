@@ -1,10 +1,11 @@
 #include "project/solver.h"
 
+#include <iostream>
+
 namespace ss {
 
-LayoutSolver::LayoutSolver(const Project& project, std::ostream& error)
+LayoutSolver::LayoutSolver(const Project& project)
 	: m_project(project)
-	, m_error(error)
 {
 }
 
@@ -34,68 +35,134 @@ bool LayoutSolver::BuildFlatMembers()
 
 void LayoutSolver::BuildViewsAsBitsets()
 {
+	std::ostream& debug = std::cout;
+
 	const MemberIndex memberUniverseSize = m_indexToMember.size();
 
 	for (auto& view : m_project.m_meta.m_views) {
-		Bitset bitset(memberUniverseSize);
+		Members bitset(memberUniverseSize);
 		for (auto& member : view->m_members) {
 			MemberIndex index = m_memberToIndex[member.first];
 			bitset[index] = true;
 		}
-		m_viewToIndex[view->m_name] = m_indexToViewBitset.size();
+		m_indexToViewName.push_back(view->m_name);
 		m_indexToViewBitset.push_back(bitset);
-		m_error << view->m_name << " " << bitset << "\n";
+		debug << view->m_name << " " << bitset << "\n";
 	}
 }
 
-void LayoutSolver::SolveDisjointViews()
+bool LayoutSolver::SolveDisjointViews(BestViews_t& outBestViews)
 {
-	using Index = unsigned long;
-	const Index viewUniverseSize = (Index)m_indexToViewBitset.size();
-	const Index numPermutations = (Index(1) << viewUniverseSize);
-	for (Index p = 1; p < numPermutations; ++p) {
-		Bitset permutation(viewUniverseSize, p);
-		m_error << "permutation=" << permutation << "\n";
+	std::ostream& debug = std::cout;
 
-		std::vector<Bitset> coverage;		
+	if (m_indexToViewBitset.size() > 32) {
+		m_error << "More than 32 views to brute force";
+		return false;
+	}
+
+	// TODO: precompute which views are disjoint at the start.
+
+	using ViewsIndices = std::vector<ViewIndex>;
+	ViewsIndices bestViews;
+	size_t bestMemberCoverage;
+
+	using Index = unsigned long;
+	// TODO: if view1 and view2 are not disjoint, then never deal
+	// with any bigger combinations containing those two.
+	const Index viewUniverseSize = Index(m_indexToViewBitset.size());
+
+	Index numPermutations;
+	if (viewUniverseSize == 32)
+		numPermutations = ULONG_MAX;
+	else
+		numPermutations = (Index(1) << viewUniverseSize) - 1;
+
+	// Iterate throw solution space.
+	for (Index p = 1; p <= numPermutations && p != 0; ++p) {
+		Views permutation(viewUniverseSize, p);
+
+		// Skip single views.
+		if (permutation.count() < 2)
+			continue;
+
+		// Convert bits back to a set of views (indices).
+		ViewsIndices coverage;
 		for (Index viewIndex = 0; viewIndex < viewUniverseSize; ++viewIndex) {
 			if (permutation.test(viewIndex)) {
-				const Bitset& viewMembers = m_indexToViewBitset[viewIndex];
-				coverage.push_back(viewMembers);
-				m_error << " viewMembers=" << viewMembers << "\n";
+				coverage.push_back(viewIndex);
 			}
 		}
 
-		bool process = true;
+		bool isDisjoint = true;
 
 		const MemberIndex memberUniverseSize = m_indexToMember.size();
-		Bitset universe(memberUniverseSize);
+		Members memberCoverage(memberUniverseSize);
 
-		for (int v1 = 0; v1 < coverage.size() && process; ++v1) {
-			universe |= coverage[v1];
-			for (int v2 = v1+1; v2 < coverage.size() && process; ++v2) {
-				Bitset intersection = coverage[v1] & coverage[v2];
-				if (intersection.any()) {
-					process = false;
-					break;
-				}
+		// Check views in the coverage if they are pairwise disjoint.
+		for (int v1 = 0; v1 < coverage.size() && isDisjoint; ++v1) {
+			const Members& v1members = m_indexToViewBitset[coverage[v1]];
+			// Also build a union for member coverage:
+			memberCoverage |= v1members;
+			for (int v2 = v1+1; v2 < coverage.size() && isDisjoint; ++v2) {
+				const Members& v2members = m_indexToViewBitset[coverage[v2]];
+
+				Members intersection = v1members & v2members;
+				// Break loops if not disjoint (if any shared member).
+				if (intersection.any())
+					isDisjoint = false;
 			}
 		}
 
-		if (process && universe.all()) {
-			m_error << " disjoint=" << permutation << "\n";
+		if (isDisjoint) {
+			debug << " disjoint=" << permutation << "\n";
+			size_t memberCoverageCount = memberCoverage.count();
+
+			bool found = bestViews.empty();
+			if (!found)
+			{
+				// Choose better coverage
+				if (memberCoverageCount > bestMemberCoverage)
+					found = true;
+			}
+
+			if (found)
+			{
+				bestViews.swap(coverage);
+				bestMemberCoverage = memberCoverageCount;
+			}
 		}
 	}
+
+	if (bestViews.empty()) {
+		m_error << "No disjoint views found";
+		return false;
+	}
+
+	for (int v = 0; v < bestViews.size(); ++v) {
+		const auto& viewName = m_indexToViewName[bestViews[v]];
+		debug << "best view=" << viewName << "\n";
+		outBestViews.push_back(viewName);
+	}
+
+	return true;
 }
 
-bool LayoutSolver::Solve()
+bool LayoutSolver::Solve(BestViews_t& outBestViews)
 {
 	if (!BuildFlatMembers())
 		return false;
 
 	BuildViewsAsBitsets();
-	SolveDisjointViews();
+
+	if (!SolveDisjointViews(outBestViews))
+		return false;
+
 	return true;
+}
+
+std::string LayoutSolver::ErrorMessage() const
+{
+	return m_error.str();
 }
 
 }
