@@ -36,7 +36,7 @@ private:
 	const Project& m_project;
 	std::stringstream m_error;
 
-	using Bitset = base::dynamic_bitset<>;
+	using Bitset = base::dynamic_bitset<uint64_t>;
 
 	using MemberIndex = Bitset::size_type;
 	using Members = Bitset;

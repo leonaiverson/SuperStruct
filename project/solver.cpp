@@ -55,8 +55,8 @@ bool LayoutSolver::SolveDisjointViews(BestViews_t& outBestViews)
 {
 	std::ostream& debug = std::cout;
 
-	if (m_indexToViewBitset.size() > 32) {
-		m_error << "More than 32 views to brute force";
+	if (m_indexToViewBitset.size() > 64) {
+		m_error << "More than 64 views to brute force";
 		return false;
 	}
 
@@ -66,14 +66,14 @@ bool LayoutSolver::SolveDisjointViews(BestViews_t& outBestViews)
 	ViewsIndices bestViews;
 	size_t bestMemberCoverage;
 
-	using Index = unsigned long;
+	using Index = uint64_t;
 	// TODO: if view1 and view2 are not disjoint, then never deal
 	// with any bigger combinations containing those two.
 	const Index viewUniverseSize = Index(m_indexToViewBitset.size());
 
 	Index numPermutations;
-	if (viewUniverseSize == 32)
-		numPermutations = ULONG_MAX;
+	if (viewUniverseSize == 64)
+		numPermutations = ULLONG_MAX;
 	else
 		numPermutations = (Index(1) << viewUniverseSize) - 1;
 

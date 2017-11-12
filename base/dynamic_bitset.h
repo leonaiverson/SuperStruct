@@ -114,6 +114,9 @@ public:
     dynamic_bitset(size_type num_bits, unsigned long value = 0,
                const Allocator& alloc = Allocator());
 
+	explicit
+	dynamic_bitset(size_type num_bits, uint64_t value,
+		const Allocator& alloc = Allocator());
 
     // WARNING: you should avoid using this constructor.
     //
@@ -176,7 +179,14 @@ public:
         init_from_unsigned_long(static_cast<size_type>(num_bits), value);
     }
 
-    template <typename T>
+	template <typename T>
+	void dispatch_init(T num_bits, uint64_t value,
+		detail::dynamic_bitset_impl::value_to_type<true>)
+	{
+		init_from_uint64(static_cast<size_type>(num_bits), value);
+	}
+
+	template <typename T>
     void dispatch_init(T first, T last,
                        detail::dynamic_bitset_impl::value_to_type<false>)
     {
@@ -412,6 +422,30 @@ private:
 
     }
 
+	void init_from_uint64(size_type num_bits, uint64_t value)
+	{
+		assert(m_bits.size() == 0);
+
+		m_bits.resize(calc_num_blocks(num_bits));
+		m_num_bits = num_bits;
+
+		typedef uint64_t num_type;
+		typedef base::detail::dynamic_bitset_impl
+			::shifter<num_type, bits_per_block, 64> shifter;
+
+		// zero out all bits at pos >= num_bits, if any;
+		// note that: num_bits == 0 implies value == 0
+		if (num_bits < static_cast<size_type>(64)) {
+			const num_type mask = (num_type(1) << num_bits) - 1;
+			value &= mask;
+		}
+
+		typename buffer_type::iterator it = m_bits.begin();
+		for (; value; shifter::left_shift(value), ++it) {
+			*it = static_cast<block_type>(value);
+		}
+	}
+
 private:
     bool m_unchecked_test(size_type pos) const;
     static size_type calc_num_blocks(size_type num_bits);
@@ -575,6 +609,15 @@ dynamic_bitset(size_type num_bits, unsigned long value, const Allocator& alloc)
       m_num_bits(0)
 {
     init_from_unsigned_long(num_bits, value);
+}
+
+template <typename Block, typename Allocator>
+dynamic_bitset<Block, Allocator>::
+dynamic_bitset(size_type num_bits, uint64_t value, const Allocator& alloc)
+	: m_bits(alloc),
+	m_num_bits(0)
+{
+	init_from_uint64(num_bits, value);
 }
 
 // copy constructor
