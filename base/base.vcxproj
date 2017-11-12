@@ -12,6 +12,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base.h" />
+    <ClInclude Include="dynamic_bitset.h" />
+    <ClInclude Include="dynamic_bitset_detail.h" />
     <ClInclude Include="memoryblock.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="tokenizer.h" />
