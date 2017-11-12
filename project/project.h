@@ -16,6 +16,8 @@ enum class ValueType : int {
 	Bool, Int, Float
 };
 
+const std::string& ToString(ValueType type);
+
 class ProjectObjView {
 public:
 	Name_t m_name;

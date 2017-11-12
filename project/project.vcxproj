@@ -23,12 +23,14 @@
     <ClCompile Include="project_data_parser.cpp" />
     <ClCompile Include="project_metadata_parser.cpp" />
     <ClCompile Include="project_parser.cpp" />
+    <ClCompile Include="solver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="project.h" />
     <ClInclude Include="project_data_parser.h" />
     <ClInclude Include="project_metadata_parser.h" />
     <ClInclude Include="project_parser.h" />
+    <ClInclude Include="solver.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
