@@ -68,8 +68,14 @@ public:
 class Project {
 public:
 	Name_t m_name;
+	Name_t m_projectPath;
+
 	std::vector<std::unique_ptr<ProjectMetadataFile>> m_metadataFiles;
 	std::vector<std::unique_ptr<ProjectDataFile>> m_dataFiles;
 };
+
+
+std::string findParentPath(const std::string& path);
+std::string makePath(const std::string& path, const std::string& filename);
 
 }

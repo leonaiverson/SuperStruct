@@ -35,7 +35,7 @@ bool CodeGenerator::GenerateFile(const ProjectMetadataFile& file, std::string& o
 
 	std::ofstream output(outputName.native());
 
-	fs::path textName = file.m_name;
+	fs::path textName = makePath(m_project.m_projectPath, file.m_name);
 	textName.replace_extension("ss_h");
 	if (!fs::exists(textName)) {
 		m_error << "Text template " << textName << " doesn't exist";

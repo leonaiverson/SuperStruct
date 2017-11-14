@@ -88,7 +88,8 @@ bool ProjectParser::ParseMetadataFiles(Project& project) {
 					return false;
 				}
 
-				if (!ReadMetadata(file->m_name, file->m_meta))
+				auto path = makePath(project.m_projectPath, file->m_name);
+				if (!ReadMetadata(path, file->m_meta))
 					return false;
 
 				project.m_metadataFiles.push_back(std::move(file));
@@ -133,7 +134,8 @@ bool ProjectParser::ParseDataFiles(Project& project) {
 					return false;
 				}
 
-				if (!ReadData(file->m_name, file->m_data))
+				auto path = makePath(project.m_projectPath, file->m_name);
+				if (!ReadData(path, file->m_data))
 					return false;
 
 				project.m_dataFiles.push_back(std::move(file));

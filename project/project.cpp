@@ -7,4 +7,13 @@ const std::string& ToString(ValueType type) {
 	return strings[int(type)];
 }
 
+std::string findParentPath(const std::string& path) {
+	size_t last_slash = path.find_last_of("\\/");
+	return last_slash == std::string::npos ? "" : path.substr(0, last_slash);
+}
+
+std::string makePath(const std::string& path, const std::string& filename) {
+	return path.empty() ? filename : (path + "/" + filename);
+}
+
 }

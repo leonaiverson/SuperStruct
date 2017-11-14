@@ -1,2 +1,1 @@
-cd project
-..\..\out\Debug\codegen.exe example.ssproj "..\generated"
+..\out\Debug\codegen.exe "project/example.ssproj" generated
