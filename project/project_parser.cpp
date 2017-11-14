@@ -37,26 +37,24 @@ bool ProjectParser::Parse(Project& project)
 			}
 			else if (Cmp("meta", key))
 			{
-				String_t metadataFileName;
-				if (!ParseEqualsString(metadataFileName))
+				if (!ParseEqualsString(project.m_metadataFileName))
 				{
 					m_errorMessage << "for project.meta";
 					return false;
 				}
 
-				if (!ReadMetadata(metadataFileName, project.m_meta))
+				if (!ReadMetadata(project.m_metadataFileName, project.m_meta))
 					return false;
 			}
 			else if( Cmp( "data", key ) )
 			{
-				String_t dataFileName;
-				if (!ParseEqualsString(dataFileName))
+				if (!ParseEqualsString(project.m_dataFileName))
 				{
 					m_errorMessage << "for project.data";
 					return false;
 				}
 
-				if (!ReadData(dataFileName, project.m_data))
+				if (!ReadData(project.m_dataFileName, project.m_data))
 					return false;
 			}
 		}

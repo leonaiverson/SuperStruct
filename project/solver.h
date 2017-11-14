@@ -21,7 +21,7 @@ namespace ss {
 //
 class LayoutSolver {
 public:
-	LayoutSolver(const Project& project);
+	explicit LayoutSolver(const Project& project);
 
 	using BestViews_t = std::vector<ViewName_t>;
 	bool Solve(BestViews_t& outBestViews);

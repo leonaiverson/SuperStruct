@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="code_generator.cpp" />
     <ClCompile Include="project.cpp" />
     <ClCompile Include="project_data_parser.cpp" />
     <ClCompile Include="project_metadata_parser.cpp" />
@@ -26,6 +27,7 @@
     <ClCompile Include="solver.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="code_generator.h" />
     <ClInclude Include="project.h" />
     <ClInclude Include="project_data_parser.h" />
     <ClInclude Include="project_metadata_parser.h" />

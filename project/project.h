@@ -13,6 +13,7 @@ namespace ss {
 using Name_t = std::string;
 using MemberName_t = std::string;
 using ViewName_t = std::string;
+using FileName_t = std::string;
 
 enum class ValueType : int {
 	Bool, Int, Float
@@ -55,7 +56,10 @@ class Project {
 public:
 	Name_t m_name;
 
+	FileName_t m_metadataFileName;
 	ProjectMetadata m_meta;
+
+	FileName_t m_dataFileName;
 	ProjectData m_data;
 };
 
