@@ -75,7 +75,7 @@ public:
 };
 
 
-std::string findParentPath(const std::string& path);
-std::string makePath(const std::string& path, const std::string& filename);
+std::string FindParentPath(const std::string& path);
+std::string MakePath(const std::string& path, const std::string& filename);
 
 }
