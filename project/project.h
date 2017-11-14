@@ -1,6 +1,7 @@
 #pragma once
 
 #include "base/base.h"
+#include "base/vec.h"
 
 #include <unordered_map>
 #include <memory>
@@ -16,7 +17,7 @@ using ViewName_t = std::string;
 using FileName_t = std::string;
 
 enum class ValueType : int {
-	Bool, Int, Float
+	Bool, Int, Float, Vec3
 };
 
 const std::string& ToString(ValueType type);
@@ -40,7 +41,7 @@ class ProjectObject {
 public:
 	Name_t m_name;
 
-	using Value_t = std::variant<bool, int, float>; // indices must match ValueType 
+	using Value_t = std::variant<bool, int, float, base::Vec3>; // indices must match ValueType 
 
 	using Values_t = std::unordered_map<MemberName_t, Value_t>;
 	Values_t m_values;

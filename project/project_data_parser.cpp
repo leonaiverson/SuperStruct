@@ -148,8 +148,33 @@ bool ProjectDataParser::ParseObjectData(ProjectData& project, ProjectObject& obj
 				}
 				projectValue = value;
 			}
+			else if (Cmp("Vec3", valueType))
+			{
+				if (!ParseEquals())
+				{
+					m_errorMessage << "for object.data.Vec3 name=x y z";
+					return false;
+				}
+				base::Vec3 value;
+				if (!ParseFloat(value.x))
+				{
+					m_errorMessage << "for object.data.Vec3 name=x";
+					return false;
+				}
+				if (!ParseFloat(value.y))
+				{
+					m_errorMessage << "for object.data.Vec3 name=x y";
+					return false;
+				}
+				if (!ParseFloat(value.z))
+				{
+					m_errorMessage << "for object.data.Vec3 name=x y z";
+					return false;
+				}
+				projectValue = value;
+			}
 			else {
-				m_errorMessage << " bool, int, float types expected";
+				m_errorMessage << " bool, int, float, Vec3 types expected";
 				return false;
 			}
 

@@ -39,10 +39,33 @@ bool CodeGenerator::Generate(std::string& outputPath)
 		std::istreambuf_iterator<char>());
 
 	ms::mustache text(textContent);
-	ms::data parameters(ms::data::type::list);
-	text.render(parameters, output);
+	ms::data parameters;
 
-	return true;
+    ms::data views(ms::data::type::list);
+	for (auto& v : m_project.m_meta.m_views) {
+		ms::data view;
+	    view.set("name", v->m_name);
+
+	    ms::data members(ms::data::type::list);
+		for (auto& m : v->m_members) {
+			ms::data member;
+			member.set("name", m.first);
+			member.set("type", ToString(m.second));
+			members.push_back(member);
+		}
+		view.set("members", members);
+
+		views.push_back(view);
+	}
+	parameters.set("views", views);
+
+	text.render(parameters, output);
+	
+	bool success = text.is_valid();
+	if (!success)
+		m_error << text.error_message();
+
+	return success;
 }
 
 std::string CodeGenerator::ErrorMessage() const

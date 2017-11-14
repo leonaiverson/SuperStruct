@@ -129,8 +129,12 @@ bool ProjectMetadataParser::ParseObjViewLayout(ProjectMetadata& meta, ProjectObj
 			{
 				valueType = ValueType::Float;
 			}
+			else if (Cmp("Vec3", memberType))
+			{
+				valueType = ValueType::Vec3;
+			}
 			else {
-				m_errorMessage << "member " << memberName << ": bool, int, float types expected";
+				m_errorMessage << "member " << memberName << ": bool, int, float, Vec3 types expected";
 				return false;
 			}
 

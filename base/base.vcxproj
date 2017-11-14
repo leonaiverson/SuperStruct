@@ -17,6 +17,7 @@
     <ClInclude Include="memoryblock.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="tokenizer.h" />
+    <ClInclude Include="vec.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="memoryblock.cpp" />
