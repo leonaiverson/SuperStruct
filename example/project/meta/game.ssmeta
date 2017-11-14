@@ -1,0 +1,14 @@
+
+view GameView1 {
+  layout {
+    int level  
+	Vec3 pos;
+  }
+}
+
+view GameView2 {
+  layout {
+    int level
+    float blend
+  }
+}

@@ -29,7 +29,7 @@ bool CodeGenerator::GenerateFile(const ProjectMetadataFile& file, std::string& o
 {
 	fs::path fileName = file.m_name;
 	fs::path outputName = fs::path(outputPath) / fileName.filename();
-	outputName.replace_extension("h");
+	outputName.replace_extension("inl");
 
 	fs::create_directories(outputName.parent_path());
 

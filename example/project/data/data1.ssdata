@@ -1,0 +1,47 @@
+
+object {
+  name=obj11
+  data {
+    bool active=true
+    int level=80
+    float scale=0.5
+    float blend=0.1
+  }
+}
+
+object {
+  name=obj12
+  data {
+    bool active=false
+    int level=90
+    float scale=0.6
+    float blend=0.2
+  }
+}
+
+object {
+  name=obj13
+  data {
+    bool active=false
+    int level=100
+    float scale=0.7
+    float blend=0.3
+	Vec3 pos=0.1 0.2 0.3
+  }
+}
+
+object {
+  name=obj14
+  data {
+    bool active=true
+    float scale=0.8
+  }
+}
+
+object {
+  name=obj15
+  data {
+    int level=10
+    float blend=0.9
+  }
+}

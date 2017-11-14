@@ -1,0 +1,13 @@
+
+view UiView1 {
+  layout {
+    bool active
+  }
+}
+
+view UiView2 {
+  layout {
+    bool active
+    float scale
+  }
+}

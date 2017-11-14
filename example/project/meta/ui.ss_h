@@ -1,0 +1,14 @@
+#pragma once
+
+#include "base/base.h"
+#include "base/vec.h"
+
+namespace example {
+
+using Vec3 = base::Vec3;
+
+{{#views}}struct {{name}} {
+{{#members}}	{{type}} {{name}};
+{{/members}}};
+
+{{/views}}}

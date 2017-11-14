@@ -1,0 +1,8 @@
+
+object {
+  name=obj21
+  data {
+    int level=10
+    float blend=0.9
+  }
+}
