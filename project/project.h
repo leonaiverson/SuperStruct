@@ -53,15 +53,23 @@ public:
 	Objects_t m_objects;
 };
 
+class ProjectMetadataFile {
+public:
+	FileName_t m_name;
+	ProjectMetadata m_meta;
+};
+
+class ProjectDataFile {
+public:
+	FileName_t m_name;
+	ProjectData m_data;
+};
+
 class Project {
 public:
 	Name_t m_name;
-
-	FileName_t m_metadataFileName;
-	ProjectMetadata m_meta;
-
-	FileName_t m_dataFileName;
-	ProjectData m_data;
+	std::vector<std::unique_ptr<ProjectMetadataFile>> m_metadataFiles;
+	std::vector<std::unique_ptr<ProjectDataFile>> m_dataFiles;
 };
 
 }

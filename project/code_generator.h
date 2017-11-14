@@ -17,6 +17,8 @@ public:
 	bool Generate(std::string& outputPath);
 
 private:
+	bool GenerateFile(const ProjectMetadataFile& file, std::string& outputPath);
+
 	const Project& m_project;
 	std::stringstream m_error;
 };

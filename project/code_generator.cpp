@@ -17,11 +17,25 @@ CodeGenerator::CodeGenerator(const Project& project)
 
 bool CodeGenerator::Generate(std::string& outputPath)
 {
-	fs::path outputName = fs::path(outputPath) / m_project.m_metadataFileName;
+	for (auto& file : m_project.m_metadataFiles) {
+		if (!GenerateFile(*file, outputPath))
+			return false;
+	}
+
+	return true;
+}
+
+bool CodeGenerator::GenerateFile(const ProjectMetadataFile& file, std::string& outputPath)
+{
+	fs::path fileName = file.m_name;
+	fs::path outputName = fs::path(outputPath) / fileName.filename();
 	outputName.replace_extension("h");
+
+	fs::create_directories(outputName.parent_path());
+
 	std::ofstream output(outputName.native());
 
-	fs::path textName = m_project.m_metadataFileName;
+	fs::path textName = file.m_name;
 	textName.replace_extension("ss_h");
 	if (!fs::exists(textName)) {
 		m_error << "Text template " << textName << " doesn't exist";
@@ -42,7 +56,7 @@ bool CodeGenerator::Generate(std::string& outputPath)
 	ms::data parameters;
 
     ms::data views(ms::data::type::list);
-	for (auto& v : m_project.m_meta.m_views) {
+	for (auto& v : file.m_meta.m_views) {
 		ms::data view;
 	    view.set("name", v->m_name);
 

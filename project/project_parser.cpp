@@ -37,24 +37,24 @@ bool ProjectParser::Parse(Project& project)
 			}
 			else if (Cmp("meta", key))
 			{
-				if (!ParseEqualsString(project.m_metadataFileName))
+				if (!SkipEndLines() || !m_tokenizer.IsSymbol() || m_tokenizer.GetSymbol() != '{')
 				{
-					m_errorMessage << "for project.meta";
+					m_errorMessage << "'{' expected after 'meta'";
 					return false;
 				}
 
-				if (!ReadMetadata(project.m_metadataFileName, project.m_meta))
+				if (!ParseMetadataFiles(project))
 					return false;
 			}
 			else if( Cmp( "data", key ) )
 			{
-				if (!ParseEqualsString(project.m_dataFileName))
+				if (!SkipEndLines() || !m_tokenizer.IsSymbol() || m_tokenizer.GetSymbol() != '{')
 				{
-					m_errorMessage << "for project.data";
+					m_errorMessage << "'{' expected after 'data'";
 					return false;
 				}
 
-				if (!ReadData(project.m_dataFileName, project.m_data))
+				if (!ParseDataFiles(project))
 					return false;
 			}
 		}
@@ -64,6 +64,96 @@ bool ProjectParser::Parse(Project& project)
 	} while( process );
 
 	return true;
+}
+
+bool ProjectParser::ParseMetadataFiles(Project& project) {
+	if (!SkipEndLines())
+	{
+		m_errorMessage << "Parameters expected after 'meta {'";
+		return false;
+	}
+
+	bool process = true;
+	do
+	{
+		if (m_tokenizer.IsWord())
+		{
+			const char* valueType = m_tokenizer.GetWord();
+			if (Cmp("file", valueType))
+			{
+				auto file = std::make_unique<ProjectMetadataFile>();
+				if (!ParseEqualsString(file->m_name))
+				{
+					m_errorMessage << "for meta file";
+					return false;
+				}
+
+				if (!ReadMetadata(file->m_name, file->m_meta))
+					return false;
+
+				project.m_metadataFiles.push_back(std::move(file));
+			}
+			else {
+				m_errorMessage << "file entries expected";
+				return false;
+			}
+		}
+		else if (m_tokenizer.IsSymbol() && m_tokenizer.GetSymbol() == '}')
+			return true;
+
+		if (!m_tokenizer.ParseNext())
+		{
+			m_errorMessage << "'}' expected after meta";
+			process = false;
+		}
+	} while (process);
+
+	return false;
+}
+
+bool ProjectParser::ParseDataFiles(Project& project) {
+	if (!SkipEndLines())
+	{
+		m_errorMessage << "Parameters expected after 'data {'";
+		return false;
+	}
+
+	bool process = true;
+	do
+	{
+		if (m_tokenizer.IsWord())
+		{
+			const char* valueType = m_tokenizer.GetWord();
+			if (Cmp("file", valueType))
+			{
+				auto file = std::make_unique<ProjectDataFile>();
+				if (!ParseEqualsString(file->m_name))
+				{
+					m_errorMessage << "for data file";
+					return false;
+				}
+
+				if (!ReadData(file->m_name, file->m_data))
+					return false;
+
+				project.m_dataFiles.push_back(std::move(file));
+			}
+			else {
+				m_errorMessage << "file entries expected";
+				return false;
+			}
+		}
+		else if (m_tokenizer.IsSymbol() && m_tokenizer.GetSymbol() == '}')
+			return true;
+
+		if (!m_tokenizer.ParseNext())
+		{
+			m_errorMessage << "'}' expected after data";
+			process = false;
+		}
+	} while (process);
+
+	return false;
 }
 
 bool ProjectParser::ReadMetadata(const String_t& fileName, ProjectMetadata& metadata)

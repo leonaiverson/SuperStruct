@@ -11,25 +11,26 @@ LayoutSolver::LayoutSolver(const Project& project)
 
 bool LayoutSolver::BuildFlatMembers()
 {
-	for (auto& view : m_project.m_meta.m_views) {
-		for (auto& member : view->m_members) {
-			auto kv = m_flatMembers.find(member.first);
-			if (kv == m_flatMembers.end())
-			{
-				m_flatMembers.insert(std::make_pair(member.first, member.second));
+	for (auto& file : m_project.m_metadataFiles) {
+		for (auto& view : file->m_meta.m_views) {
+			for (auto& member : view->m_members) {
+				auto kv = m_flatMembers.find(member.first);
+				if (kv == m_flatMembers.end())
+				{
+					m_flatMembers.insert(std::make_pair(member.first, member.second));
 				
-				m_memberToIndex.insert(std::make_pair(member.first, m_indexToMember.size()));
-				m_indexToMember.push_back(member.first);
-			}
-			else if (kv->second != member.second)
-			{
-				m_error << " flatMembers member " << kv->first <<
-					" type differs: " << ToString(kv->second) << " vs " << ToString(member.second);
-				return false;
+					m_memberToIndex.insert(std::make_pair(member.first, m_indexToMember.size()));
+					m_indexToMember.push_back(member.first);
+				}
+				else if (kv->second != member.second)
+				{
+					m_error << " flatMembers member " << kv->first <<
+						" type differs: " << ToString(kv->second) << " vs " << ToString(member.second);
+					return false;
+				}
 			}
 		}
 	}
-
 	return true;
 }
 
@@ -39,15 +40,17 @@ void LayoutSolver::BuildViewsAsBitsets()
 
 	const MemberIndex memberUniverseSize = m_indexToMember.size();
 
-	for (auto& view : m_project.m_meta.m_views) {
-		Members bitset(memberUniverseSize);
-		for (auto& member : view->m_members) {
-			MemberIndex index = m_memberToIndex[member.first];
-			bitset[index] = true;
+	for (auto& file : m_project.m_metadataFiles) {
+		for (auto& view : file->m_meta.m_views) {
+			Members bitset(memberUniverseSize);
+			for (auto& member : view->m_members) {
+				MemberIndex index = m_memberToIndex[member.first];
+				bitset[index] = true;
+			}
+			m_indexToViewName.push_back(view->m_name);
+			m_indexToViewBitset.push_back(bitset);
+			debug << view->m_name << " " << bitset << "\n";
 		}
-		m_indexToViewName.push_back(view->m_name);
-		m_indexToViewBitset.push_back(bitset);
-		debug << view->m_name << " " << bitset << "\n";
 	}
 }
 
